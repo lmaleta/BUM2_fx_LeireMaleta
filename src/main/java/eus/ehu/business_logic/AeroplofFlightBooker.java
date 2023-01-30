@@ -22,7 +22,6 @@ public class AeroplofFlightBooker implements FlightBooker {
 	List<Flight> availableFlights;
 
 	public AeroplofFlightBooker () {
-		super();
 
 		// This section is for testing purposes and it's not truly related to
 		// the construction process. A couple of flights are created and
