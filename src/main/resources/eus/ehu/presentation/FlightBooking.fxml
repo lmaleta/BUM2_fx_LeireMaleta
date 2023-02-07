@@ -38,5 +38,7 @@
             <Image url="@plane-fire.png" />
          </image>
       </ImageView>
+      <Label layoutX="486.0" layoutY="183.0" text="No. Tickets:" />
+      <TextField fx:id="ticketInput" layoutX="562.0" layoutY="178.0" prefHeight="26.0" prefWidth="38.0" />
    </children>
 </AnchorPane>

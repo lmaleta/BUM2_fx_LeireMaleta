@@ -42,6 +42,9 @@ public class FlightBookingController {
     private TextField dayInput;
 
     @FXML
+    private TextField ticketInput;
+
+    @FXML
     private TextField yearInput;
 
     @FXML
@@ -109,6 +112,14 @@ public class FlightBookingController {
     @FXML
     void searchConFlightsButton(ActionEvent event) {
         List<ConcreteFlight> conFlight = new ArrayList<>();
+        int ticket = -1;
+        try{
+            ticket = Integer.parseInt(ticketInput.getText());
+        }
+        catch (NumberFormatException e){
+            ticket = -1;
+        }
+
 
         conFlightInfo.clear();
 
@@ -132,13 +143,17 @@ public class FlightBookingController {
                 } else if (economyRB.isSelected()) {
                     remaining = v.getFreeEconomySeatNo();
                 }
-                if(remaining > 0){
+
+                if(remaining >= ticket && remaining > 0){
                     conFlightInfo.add(v);
                     conFlight.add(v);
                 }
             }
 
-            if (conFlight.isEmpty())
+            if(ticket < 0){
+                searchResultAnswer.setText("Please enter a valid number of tickets");
+            }
+            else if (conFlight.isEmpty())
                 searchResultAnswer.setText("No matching flights found. " +
                         "Please change your options");
             else
@@ -159,11 +174,11 @@ public class FlightBookingController {
     void selectConFlight(ActionEvent event) {
         int remaining = 0;
         if (firstRB.isSelected()) {
-            remaining = businessLogic.bookSeat(selectedConFlight, "First");
+            remaining = businessLogic.bookSeat(selectedConFlight, "First", Integer.parseInt(ticketInput.getText()));
         } else if (businessRB.isSelected()) {
-            remaining = businessLogic.bookSeat(selectedConFlight, "Business");
+            remaining = businessLogic.bookSeat(selectedConFlight, "Business", Integer.parseInt(ticketInput.getText()));
         } else if (economyRB.isSelected()) {
-            remaining = businessLogic.bookSeat(selectedConFlight, "Economy");
+            remaining = businessLogic.bookSeat(selectedConFlight, "Economy", Integer.parseInt(ticketInput.getText()));
         }
         if (remaining < 0)
             bookSelectedConFlightButton.setText("Error: This flight had no "

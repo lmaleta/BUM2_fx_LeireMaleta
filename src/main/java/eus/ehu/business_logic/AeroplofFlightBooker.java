@@ -96,8 +96,8 @@ public class AeroplofFlightBooker implements FlightBooker {
 	 * @return				The number of remaining free seats for this fare after
 	 * 						the booking, or -1 if no available seat to book
 	 */
-	public int bookSeat(ConcreteFlight conFli, String fare) {
-		return conFli.allocateSeat(fare, 1);
+	public int bookSeat(ConcreteFlight conFli, String fare, int numTickets) {
+		return conFli.allocateSeat(fare, numTickets);
 	}
 
 }
