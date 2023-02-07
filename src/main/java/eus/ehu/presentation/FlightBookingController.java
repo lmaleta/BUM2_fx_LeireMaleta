@@ -138,7 +138,6 @@ public class FlightBookingController {
                 }
             }
 
-            //if (foundConFlights.isEmpty())
             if (conFlight.isEmpty())
                 searchResultAnswer.setText("No matching flights found. " +
                         "Please change your options");
