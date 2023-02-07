@@ -8,10 +8,7 @@ import javafx.scene.control.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javafx.event.ActionEvent;
 
@@ -28,9 +25,12 @@ public class FlightBookingController {
     // create conFlightInfo JAvaFX observable list
     private ObservableList<ConcreteFlight> conFlightInfo = FXCollections.observableArrayList();
 
-    @FXML
-    private ListView<ConcreteFlight> conFlightList;
+    //@FXML
+    //private ListView<ConcreteFlight> conFlightList;
     ;
+
+    @FXML
+    private ComboBox<ConcreteFlight> conFlightCombo;
 
     @FXML
     private Button bookSelectedConFlightButton;
@@ -82,7 +82,7 @@ public class FlightBookingController {
         final int JULY = 6;
         monthCombo.getSelectionModel().select(JULY);
 
-        conFlightList.setItems(conFlightInfo);
+        conFlightCombo.setItems(conFlightInfo);
         bookSelectedConFlightButton.setDisable(true);
 
         /**
@@ -91,7 +91,7 @@ public class FlightBookingController {
          * enabled and displays an invitation to book it
          */
 
-        conFlightList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        conFlightCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedConFlight = newValue;
                 bookSelectedConFlightButton.setDisable(false);
@@ -108,6 +108,7 @@ public class FlightBookingController {
      */
     @FXML
     void searchConFlightsButton(ActionEvent event) {
+        List<ConcreteFlight> conFlight = new ArrayList<>();
 
         conFlightInfo.clear();
 
@@ -122,9 +123,23 @@ public class FlightBookingController {
             List<ConcreteFlight> foundConFlights = businessLogic.
                     getMatchingConFlights(departureInput.getText(),
                             arrivalInput.getText(), chosenDate);
-            for (ConcreteFlight v : foundConFlights)
-                conFlightInfo.add(v);
-            if (foundConFlights.isEmpty())
+            for (ConcreteFlight v : foundConFlights){
+                int remaining = 0;
+                if (firstRB.isSelected()) {
+                    remaining = v.getFreeFirstSeatNo();
+                } else if (businessRB.isSelected()) {
+                    remaining = v.getFreeBusinessSeatNo();
+                } else if (economyRB.isSelected()) {
+                    remaining = v.getFreeEconomySeatNo();
+                }
+                if(remaining > 0){
+                    conFlightInfo.add(v);
+                    conFlight.add(v);
+                }
+            }
+
+            //if (foundConFlights.isEmpty())
+            if (conFlight.isEmpty())
                 searchResultAnswer.setText("No matching flights found. " +
                         "Please change your options");
             else
@@ -134,7 +149,6 @@ public class FlightBookingController {
             searchResultAnswer.setText("The chosen date " + chosenDateString +
                     " is not valid. Please correct it");
         }
-
     }
 
     /**
